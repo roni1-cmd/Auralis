@@ -1,0 +1,2332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Auralis - Home</title>
+  <link rel="icon" href="Auralis.png" type="image/png">
+  <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      scrollbar-width: none; /* Firefox */
+    }
+
+    *::-webkit-scrollbar {
+      display: none; /* Chrome, Safari, Edge */
+    }
+
+    body {
+      font-family: 'Google Sans', sans-serif;
+      background: #000000;
+      color: #ffffff;
+      line-height: 1.5;
+      display: flex;
+      min-height: 100vh;
+    }
+
+    .sidebar {
+      width: 256px;
+      background: #000000;
+      border-right: 1px solid #333333;
+      padding: 1.5rem 0;
+      height: 100vh;
+      position: fixed;
+      overflow-y: auto;
+      transition: transform 0.3s ease;
+      z-index: 100;
+    }
+
+    .sidebar.hidden {
+      transform: translateX(-256px);
+    }
+
+    .sidebar-header {
+      padding: 0 1.5rem 2rem;
+      border-bottom: 1px solid #333333;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+    }
+
+    .sidebar-logo {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-family: 'Google Sans', sans-serif;
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: #ffffff;
+    }
+
+    .sidebar-logo img {
+      width: 48px;
+      height: 48px;
+      object-fit: contain;
+    }
+
+    .sidebar-nav {
+      padding: 0 1rem;
+    }
+
+    .sidebar-nav ul {
+      list-style: none;
+    }
+
+    .sidebar-nav li {
+      margin: 0.25rem 0;
+    }
+
+    .sidebar-nav a {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.75rem 0.75rem;
+      color: #aaaaaa;
+      text-decoration: none;
+      font-family: 'Google Sans', sans-serif;
+      font-size: 0.875rem;
+      font-weight: 500;
+      border-radius: 0.5rem;
+      transition: all 0.2s ease;
+    }
+
+    .sidebar-nav a:hover {
+      background: #1a1a1a;
+      color: #ffffff;
+    }
+
+    .sidebar-nav a.active {
+      color: rgb(63, 159, 255);
+      font-weight: 600;
+    }
+
+    .sidebar-nav .material-icons {
+      font-size: 1.25rem;
+    }
+
+    .sidebar-toggle {
+      position: fixed;
+      top: 1rem;
+      left: 1rem;
+      background: #1a1a1a;
+      border: 1px solid #333333;
+      padding: 0.5rem;
+      border-radius: 0.5rem;
+      cursor: pointer;
+      z-index: 101;
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s ease;
+    }
+
+    .sidebar-toggle:hover {
+      background: #2a2a2a;
+      border-color: #666666;
+    }
+
+    .main-content {
+      margin-left: 256px;
+      flex: 1;
+      padding: 2rem;
+      transition: margin-left 0.3s ease;
+      max-width: calc(100vw - 256px);
+      background: #000000;
+    }
+
+    .main-content.full-width {
+      margin-left: 0;
+      max-width: 100vw;
+    }
+
+    .page-header {
+      margin-bottom: 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .page-title {
+      font-family: 'Google Sans', sans-serif;
+      font-size: 2rem;
+      font-weight: 700;
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .user-dropdown {
+      position: relative;
+      display: inline-block;
+    }
+
+    .user-dropdown-toggle {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: #1a1a1a;
+      border: 1px solid #333333;
+      padding: 0.5rem 1rem;
+      border-radius: 0.5rem;
+      cursor: pointer;
+      color: #ffffff;
+      font-family: 'Google Sans', sans-serif;
+      font-size: 0.875rem;
+      transition: all 0.2s ease;
+    }
+
+    .user-dropdown-toggle:hover {
+      background: #2a2a2a;
+    }
+
+    .user-avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+
+    .user-dropdown-menu {
+      position: absolute;
+      top: 100%;
+      right: 0;
+      background: #1a1a1a;
+      border: 1px solid #333333;
+      border-radius: 0.5rem;
+      min-width: 200px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+      z-index: 1000;
+      display: none;
+      margin-top: 0.5rem;
+    }
+
+    .user-dropdown-menu.show {
+      display: block;
+    }
+
+    .user-dropdown-item {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.75rem 1rem;
+      color: #ffffff;
+      text-decoration: none;
+      font-family: 'Google Sans', sans-serif;
+      font-size: 0.875rem;
+      border: none;
+      background: none;
+      width: 100%;
+      text-align: left;
+      cursor: pointer;
+      transition: background 0.2s ease;
+    }
+
+    .user-dropdown-item:hover {
+      background: #2a2a2a;
+    }
+
+    .user-dropdown-item.danger {
+      color: rgb(255, 77, 156);
+    }
+
+    .user-dropdown-item.danger:hover {
+      background: #2a1a1a;
+    }
+
+    .welcome-card {
+      background: linear-gradient(135deg, #1a1a1a, #2a2a2a);
+      border: 1px solid #333333;
+      border-radius: 1rem;
+      padding: 2rem;
+      margin-bottom: 2rem;
+      color: #ffffff;
+    }
+
+    .welcome-title {
+      font-family: 'Google Sans', sans-serif;
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+
+    .welcome-subtitle {
+      font-family: 'Google Sans', sans-serif;
+      font-size: 1rem;
+      opacity: 0.9;
+      margin-bottom: 1.5rem;
+    }
+
+    .welcome-actions {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .btn-primary {
+      background: rgb(63, 159, 255);
+      color: #ffffff;
+      border: none;
+      padding: 0.75rem 1.5rem;
+      border-radius: 0.5rem;
+      font-family: 'Google Sans', sans-serif;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .btn-primary:hover {
+      background: rgb(83, 179, 255);
+      transform: translateY(-1px);
+    }
+
+    .btn-secondary {
+      background: transparent;
+      color: #ffffff;
+      border: 1px solid #333333;
+      padding: 0.75rem 1.5rem;
+      border-radius: 0.5rem;
+      font-family: 'Google Sans', sans-serif;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .btn-secondary:hover {
+      background: #1a1a1a;
+      border-color: #666666;
+    }
+
+    .tool-section {
+      display: none;
+    }
+
+    .tool-section.active {
+      display: block;
+    }
+
+    .card {
+      background: #1a1a1a;
+      border: 1px solid #333333;
+      border-radius: 1rem;
+      padding: 2rem;
+      margin-bottom: 1.5rem;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    /* Remove borders for all generators except accounts */
+    #grade .card,
+    #summarize .card,
+    #plagiarism .card,
+    #simplify .card,
+    #rubric .card,
+    #report .card,
+    #curriculum .card,
+    #lesson .card {
+      background: transparent;
+      border: none;
+      box-shadow: none;
+    }
+
+    #accounts .card {
+      background: #1a1a1a;
+      border: 1px solid #333333;
+    }
+
+    #history .card {
+      background: transparent;
+      border: none;
+      box-shadow: none;
+      padding: 0;
+    }
+
+    .card-header {
+      margin-bottom: 1.5rem;
+    }
+
+    .card-title {
+      font-family: 'Google Sans', sans-serif;
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: #ffffff;
+      margin-bottom: 0.5rem;
+    }
+
+    .card-description {
+      color: #aaaaaa;
+      font-family: 'Google Sans', sans-serif;
+      font-size: 0.875rem;
+      line-height: 1.6;
+    }
+
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+
+    .form-label {
+      display: block;
+      font-family: 'Google Sans', sans-serif;
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: #ffffff;
+      margin-bottom: 0.5rem;
+    }
+
+    .form-input, .form-textarea, .form-select {
+      width: 100%;
+      padding: 0.75rem;
+      border: 1px solid #333333;
+      border-radius: 0.5rem;
+      font-family: 'Google Sans', sans-serif;
+      font-size: 0.875rem;
+      background: #2a2a2a;
+      color: #ffffff;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .form-input:focus, .form-textarea:focus, .form-select:focus {
+      outline: none;
+      border-color: rgb(63, 159, 255);
+      box-shadow: 0 0 0 3px rgba(63, 159, 255, 0.2);
+    }
+
+    .form-textarea {
+      min-height: 150px;
+      resize: vertical;
+    }
+
+    .file-input {
+      position: relative;
+      display: inline-block;
+      cursor: pointer;
+      width: 100%;
+    }
+
+    .file-input input[type="file"] {
+      position: absolute;
+      opacity: 0;
+      width: 100%;
+      height: 100%;
+      cursor: pointer;
+    }
+
+    .file-input-label {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.75rem;
+      border: 2px dashed #333333;
+      border-radius: 0.5rem;
+      background: #2a2a2a;
+      color: #aaaaaa;
+      font-family: 'Google Sans', sans-serif;
+      font-size: 0.875rem;
+      transition: all 0.2s ease;
+    }
+
+    .file-input:hover .file-input-label {
+      border-color: rgb(63, 159, 255);
+      background: #3a3a3a;
+    }
+
+    .file-preview {
+      margin-top: 0.5rem;
+      padding: 0.5rem;
+      background: #2a2a2a;
+      border-radius: 0.375rem;
+      font-family: 'Google Sans', sans-serif;
+      font-size: 0.75rem;
+      color: #aaaaaa;
+    }
+
+    .btn {
+      background: rgb(63, 159, 255);
+      color: #ffffff;
+      border: none;
+      padding: 0.75rem 1.5rem;
+      border-radius: 0.5rem;
+      font-family: 'Google Sans', sans-serif;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.875rem;
+    }
+
+    .btn:hover {
+      background: rgb(83, 179, 255);
+      transform: translateY(-1px);
+    }
+
+    .btn:disabled {
+      background: #666666;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .btn-danger {
+      background: rgb(255, 77, 156);
+    }
+
+    .btn-danger:hover {
+      background: rgb(255, 97, 176);
+    }
+
+    .output {
+      margin-top: 1.5rem;
+      padding: 1.5rem;
+      background: #2a2a2a;
+      border: 1px solid #333333;
+      border-radius: 0.5rem;
+      font-family: 'Google Sans', sans-serif;
+      font-size: 0.875rem;
+      white-space: pre-wrap;
+      color: #ffffff;
+      line-height: 1.6;
+    }
+
+    .history-list {
+      list-style: none;
+    }
+
+    .history-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.75rem 0;
+      margin-bottom: 0.5rem;
+    }
+
+    .history-item-info {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .history-item-name {
+      font-family: 'Google Sans', sans-serif;
+      font-weight: 500;
+      color: #ffffff;
+      flex: 1;
+    }
+
+    .history-item-date {
+      font-family: 'Google Sans', sans-serif;
+      font-size: 0.75rem;
+      color: #aaaaaa;
+      min-width: 120px;
+    }
+
+    .history-item-actions {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .btn-sm {
+      padding: 0.5rem 0.75rem;
+      font-size: 0.75rem;
+    }
+
+    .loading-bar {
+      width: 100%;
+      height: 4px;
+      background: #333333;
+      border-radius: 2px;
+      overflow: hidden;
+      margin: 0.5rem 0;
+    }
+
+    .loading-bar-fill {
+      width: 0;
+      height: 100%;
+      background: rgb(63, 159, 255);
+      animation: loading 1.5s infinite ease-in-out;
+    }
+
+    @keyframes loading {
+      0% { width: 0; }
+      50% { width: 50%; }
+      100% { width: 0; }
+    }
+
+    .sort-controls {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .sort-button {
+      background: #1a1a1a;
+      border: 1px solid #333333;
+      color: #ffffff;
+      padding: 0.5rem 1rem;
+      border-radius: 0.5rem;
+      font-family: 'Google Sans', sans-serif;
+      font-size: 0.875rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .sort-button:hover {
+      background: #2a2a2a;
+      border-color: #666666;
+    }
+
+    .sort-button.active {
+      background: rgb(63, 159, 255);
+      border-color: rgb(63, 159, 255);
+    }
+
+    .modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.8);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+    }
+
+    .modal.show {
+      display: flex;
+    }
+
+    .modal-content {
+      background: #1a1a1a;
+      border: 1px solid #333333;
+      border-radius: 1rem;
+      padding: 2rem;
+      max-width: 600px;
+      width: 90%;
+      max-height: 80vh;
+      overflow-y: auto;
+    }
+
+    .modal-header {
+      margin-bottom: 1.5rem;
+    }
+
+    .modal-title {
+      font-family: 'Google Sans', sans-serif;
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: #ffffff;
+    }
+
+    .modal-actions {
+      display: flex;
+      gap: 1rem;
+      margin-top: 1.5rem;
+      justify-content: flex-end;
+      flex-wrap: wrap;
+    }
+
+    .usage-metrics {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+      margin-bottom: 2rem;
+    }
+
+    .metric-card {
+      background: #1a1a1a;
+      border: 1px solid #333333;
+      border-radius: 1rem;
+      padding: 1.5rem;
+    }
+
+    .metric-title {
+      font-family: 'Google Sans', sans-serif;
+      font-size: 1rem;
+      font-weight: 600;
+      color: #ffffff;
+      margin-bottom: 1rem;
+    }
+
+    .metric-content {
+      color: #aaaaaa;
+      font-family: 'Google Sans', sans-serif;
+      font-size: 0.875rem;
+    }
+
+    .chart-container {
+      position: relative;
+      height: 200px;
+      width: 100%;
+      margin-top: 1rem;
+    }
+
+    .account-info {
+      background: #1a1a1a;
+      border: 1px solid #333333;
+      border-radius: 1rem;
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .account-info-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+
+    .account-info-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.75rem 0;
+      border-bottom: 1px solid #333333;
+    }
+
+    .account-info-item:last-child {
+      border-bottom: none;
+    }
+
+    .account-info-label {
+      font-family: 'Google Sans', sans-serif;
+      font-size: 0.875rem;
+      color: #aaaaaa;
+    }
+
+    .account-info-value {
+      font-family: 'Google Sans', sans-serif;
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: #ffffff;
+    }
+
+    /* Profile Page Styles */
+    .profile-header {
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+      margin-bottom: 2rem;
+      padding: 2rem;
+      background: linear-gradient(135deg, #1a1a1a, #2a2a2a);
+      border-radius: 1rem;
+      border: 1px solid #333333;
+    }
+
+    .profile-avatar-large {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 3px solid rgb(63, 159, 255);
+    }
+
+    .profile-info h2 {
+      font-family: 'Google Sans', sans-serif;
+      font-size: 2rem;
+      font-weight: 700;
+      color: #ffffff;
+      margin-bottom: 0.5rem;
+    }
+
+    .profile-info p {
+      color: #aaaaaa;
+      font-size: 1rem;
+      margin-bottom: 0.25rem;
+    }
+
+    .profile-stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .profile-stat-card {
+      background: #1a1a1a;
+      border: 1px solid #333333;
+      border-radius: 1rem;
+      padding: 1.5rem;
+      text-align: center;
+    }
+
+    .profile-stat-number {
+      font-size: 2rem;
+      font-weight: 700;
+      color: rgb(63, 159, 255);
+      margin-bottom: 0.5rem;
+    }
+
+    .profile-stat-label {
+      color: #aaaaaa;
+      font-size: 0.875rem;
+    }
+
+    .profile-section {
+      background: #1a1a1a;
+      border: 1px solid #333333;
+      border-radius: 1rem;
+      padding: 2rem;
+      margin-bottom: 2rem;
+    }
+
+    .profile-section h3 {
+      font-family: 'Google Sans', sans-serif;
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: #ffffff;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .profile-detail-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+
+    .profile-detail-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.75rem 0;
+      border-bottom: 1px solid #333333;
+    }
+
+    .profile-detail-item:last-child {
+      border-bottom: none;
+    }
+
+    .profile-detail-label {
+      font-family: 'Google Sans', sans-serif;
+      font-size: 0.875rem;
+      color: #aaaaaa;
+    }
+
+    .profile-detail-value {
+      font-family: 'Google Sans', sans-serif;
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: #ffffff;
+    }
+
+    .profile-actions {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      margin-top: 2rem;
+    }
+
+    @media (max-width: 768px) {
+      .sidebar {
+        transform: translateX(-256px);
+      }
+
+      .sidebar.show {
+        transform: translateX(0);
+      }
+
+      .main-content {
+        margin-left: 0;
+        max-width: 100vw;
+        padding: 1rem;
+      }
+
+      .usage-metrics {
+        grid-template-columns: 1fr;
+      }
+
+      .account-info-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .profile-detail-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .profile-header {
+        flex-direction: column;
+        text-align: center;
+      }
+
+      .profile-stats {
+        grid-template-columns: 1fr;
+      }
+
+      .history-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+      }
+
+      .history-item-info {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .history-item-actions {
+        width: 100%;
+        justify-content: flex-start;
+        flex-wrap: wrap;
+      }
+
+      .page-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <button class="sidebar-toggle" onclick="toggleSidebar()">
+    <span class="material-icons">menu</span>
+  </button>
+
+  <div class="sidebar hidden" id="sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-logo">
+        <img src="Auralis.png" alt="Auralis Logo" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline';">
+        <span class="material-icons" style="color: rgb(63, 159, 255); display: none;">school</span>
+        Auralis
+      </div>
+    </div>
+    <nav class="sidebar-nav">
+      <ul>
+        <li><a href="#" onclick="showTool('accounts')" class="active" id="nav-accounts">
+          <span class="material-icons">home</span>
+          Home
+        </a></li>
+        <li><a href="#" onclick="showTool('grade')" id="nav-grade">
+          <span class="material-icons">grading</span>
+          Automatic Grading
+        </a></li>
+        <li><a href="#" onclick="showTool('summarize')" id="nav-summarize">
+          <span class="material-icons">summarize</span>
+          Summarize Articles
+        </a></li>
+        <li><a href="#" onclick="showTool('plagiarism')" id="nav-plagiarism">
+          <span class="material-icons">search</span>
+          Plagiarism Check
+        </a></li>
+        <li><a href="#" onclick="showTool('simplify')" id="nav-simplify">
+          <span class="material-icons">accessibility</span>
+          IEP-Aware Rewrite
+        </a></li>
+        <li><a href="#" onclick="showTool('rubric')" id="nav-rubric">
+          <span class="material-icons">assignment</span>
+          Rubric Generator
+        </a></li>
+        <li><a href="#" onclick="showTool('report')" id="nav-report">
+          <span class="material-icons">report</span>
+          Report Card Comments
+        </a></li>
+        <li><a href="#" onclick="showTool('curriculum')" id="nav-curriculum">
+          <span class="material-icons">book</span>
+          Curriculum Analyzer
+        </a></li>
+        <li><a href="#" onclick="showTool('lesson')" id="nav-lesson">
+          <span class="material-icons">event_note</span>
+          Lesson Plan Generator
+        </a></li>
+        <li><a href="#" onclick="showTool('history')" id="nav-history">
+          <span class="material-icons">history</span>
+          History
+        </a></li>
+      </ul>
+    </nav>
+  </div>
+
+  <div class="main-content full-width" id="mainContent">
+    <div id="accounts" class="tool-section active">
+      <div class="page-header">
+        <h1 class="page-title">Home</h1>
+        <div class="user-dropdown" id="userDropdown" style="display: none;">
+          <button class="user-dropdown-toggle" onclick="toggleUserDropdown()">
+            <img id="userAvatar" class="user-avatar" src="/placeholder.svg" alt="User Avatar">
+            <span id="userName">User</span>
+            <span class="material-icons">expand_more</span>
+          </button>
+          <div class="user-dropdown-menu" id="userDropdownMenu">
+            <button class="user-dropdown-item" onclick="showTool('profile')">
+              <span class="material-icons">person</span>
+              Profile
+            </button>
+            <button class="user-dropdown-item" onclick="showTool('history')">
+              <span class="material-icons">history</span>
+              History
+            </button>
+            <button class="user-dropdown-item" id="signOutBtn">
+              <span class="material-icons">logout</span>
+              Sign Out
+            </button>
+            <button class="user-dropdown-item danger" id="deleteAccountBtn">
+              <span class="material-icons">delete</span>
+              Delete Account
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="welcome-card">
+        <h2 class="welcome-title" id="welcomeTitle">Welcome!</h2>
+        <p class="welcome-subtitle">The fastest inference engine for building production-ready AI systems</p>
+        <div class="welcome-actions">
+          <button class="btn-primary" id="googleSignInBtn">
+            <span class="material-icons">login</span>
+            Start building
+          </button>
+          <a href="#" class="btn-secondary" onclick="showTool('grade')">Learn more</a>
+        </div>
+      </div>
+
+      <div class="usage-metrics">
+        <div class="metric-card">
+          <h3 class="metric-title">Usage Metrics (24h)</h3>
+          <div class="metric-content">
+            <p>API Calls: <span id="apiCallsCount">0</span></p>
+            <p style="font-size: 0.75rem; margin-top: 0.5rem; color: #666666;">Your usage metrics will appear here after your first API call.</p>
+            <div class="chart-container">
+              <canvas id="usageChart"></canvas>
+            </div>
+          </div>
+        </div>
+        <div class="metric-card">
+          <h3 class="metric-title">Account & Recent History</h3>
+          <div class="account-info-grid">
+            <div class="account-info-item">
+              <span class="account-info-label">Account ID</span>
+              <span class="account-info-value" id="accountId">-</span>
+            </div>
+            <div class="account-info-item">
+              <span class="account-info-label">Account Type</span>
+              <span class="account-info-value">Teacher</span>
+            </div>
+            <div class="account-info-item">
+              <span class="account-info-label">Rate Limit</span>
+              <span class="account-info-value">10 qpm</span>
+            </div>
+            <div class="account-info-item">
+              <span class="account-info-label">Current Spend</span>
+              <span class="account-info-value">$0.00</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <h3 class="card-title">Recent History (Latest 2)</h3>
+          <p class="card-description">Your most recent AI tool usage</p>
+        </div>
+        <ul id="recentHistoryList" class="history-list"></ul>
+      </div>
+    </div>
+
+    <div id="profile" class="tool-section">
+      <div class="page-header">
+        <h1 class="page-title">
+          <span class="material-icons">person</span>
+          My Profile
+        </h1>
+      </div>
+
+      <div class="profile-header">
+        <img id="profileAvatarLarge" class="profile-avatar-large" src="/placeholder.svg" alt="Profile Avatar">
+        <div class="profile-info">
+          <h2 id="profileName">User Name</h2>
+          <p id="profileEmail">user@example.com</p>
+          <p id="profileJoinDate">Member since: January 2024</p>
+          <p id="profileAccountType">Account Type: Teacher</p>
+        </div>
+      </div>
+
+      <div class="profile-stats">
+        <div class="profile-stat-card">
+          <div class="profile-stat-number" id="totalApiCalls">0</div>
+          <div class="profile-stat-label">Total API Calls</div>
+        </div>
+        <div class="profile-stat-card">
+          <div class="profile-stat-number" id="toolsUsed">0</div>
+          <div class="profile-stat-label">Tools Used</div>
+        </div>
+        <div class="profile-stat-card">
+          <div class="profile-stat-number" id="totalSpend">$0.00</div>
+          <div class="profile-stat-label">Total Spend</div>
+        </div>
+        <div class="profile-stat-card">
+          <div class="profile-stat-number" id="avgDaily">0</div>
+          <div class="profile-stat-label">Avg Daily Usage</div>
+        </div>
+      </div>
+
+      <div class="profile-section">
+        <h3>
+          <span class="material-icons">account_circle</span>
+          Account Information
+        </h3>
+        <div class="profile-detail-grid">
+          <div class="profile-detail-item">
+            <span class="profile-detail-label">Full Name</span>
+            <span class="profile-detail-value" id="profileFullName">-</span>
+          </div>
+          <div class="profile-detail-item">
+            <span class="profile-detail-label">Email Address</span>
+            <span class="profile-detail-value" id="profileEmailDetail">-</span>
+          </div>
+          <div class="profile-detail-item">
+            <span class="profile-detail-label">Account ID</span>
+            <span class="profile-detail-value" id="profileAccountId">-</span>
+          </div>
+          <div class="profile-detail-item">
+            <span class="profile-detail-label">Account Status</span>
+            <span class="profile-detail-value">Active</span>
+          </div>
+          <div class="profile-detail-item">
+            <span class="profile-detail-label">Member Since</span>
+            <span class="profile-detail-value" id="profileMemberSince">-</span>
+          </div>
+          <div class="profile-detail-item">
+            <span class="profile-detail-label">Last Login</span>
+            <span class="profile-detail-value" id="profileLastLogin">-</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="profile-section">
+        <h3>
+          <span class="material-icons">settings</span>
+          Account Settings
+        </h3>
+        <div class="profile-detail-grid">
+          <div class="profile-detail-item">
+            <span class="profile-detail-label">Rate Limit</span>
+            <span class="profile-detail-value">10 queries per minute</span>
+          </div>
+          <div class="profile-detail-item">
+            <span class="profile-detail-label">API Access</span>
+            <span class="profile-detail-value">Enabled</span>
+          </div>
+          <div class="profile-detail-item">
+            <span class="profile-detail-label">Data Retention</span>
+            <span class="profile-detail-value">30 days</span>
+          </div>
+          <div class="profile-detail-item">
+            <span class="profile-detail-label">Export Data</span>
+            <span class="profile-detail-value">Available</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="profile-section">
+        <h3>
+          <span class="material-icons">bar_chart</span>
+          Usage Statistics
+        </h3>
+        <div class="profile-detail-grid">
+          <div class="profile-detail-item">
+            <span class="profile-detail-label">Most Used Tool</span>
+            <span class="profile-detail-value" id="mostUsedTool">-</span>
+          </div>
+          <div class="profile-detail-item">
+            <span class="profile-detail-label">This Month</span>
+            <span class="profile-detail-value" id="thisMonthUsage">0 calls</span>
+          </div>
+          <div class="profile-detail-item">
+            <span class="profile-detail-label">Last 7 Days</span>
+            <span class="profile-detail-value" id="lastWeekUsage">0 calls</span>
+          </div>
+          <div class="profile-detail-item">
+            <span class="profile-detail-label">Today</span>
+            <span class="profile-detail-value" id="todayUsage">0 calls</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="profile-actions">
+        <button class="btn" onclick="exportUserData()">
+          <span class="material-icons">download</span>
+          Export My Data
+        </button>
+        <button class="btn" style="background: #666666;" onclick="showTool('accounts')">
+          <span class="material-icons">arrow_back</span>
+          Back to Home
+        </button>
+      </div>
+    </div>
+
+    <div id="grade" class="tool-section">
+      <div class="page-header">
+        <h1 class="page-title">
+          <span class="material-icons">grading</span>
+          Automatic Grading & Feedback
+        </h1>
+      </div>
+      <div class="card">
+        <div class="card-header">
+          <p class="card-description">Upload a student essay (PDF, DOC, XLSX) or paste text. For best results, ensure the file contains clear, selectable text and specify grading criteria.</p>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Grading Criteria</label>
+          <textarea id="essayCriteria" class="form-textarea" placeholder="Enter grading criteria or rubric (e.g., Content: 40%, Clarity: 30%, Grammar: 20%, Creativity: 10%)"></textarea>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Student Answer</label>
+          <textarea id="essayInput" class="form-textarea" placeholder="Paste student answer here or upload a file..."></textarea>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Upload File</label>
+          <div class="file-input">
+            <input type="file" id="essayFile" accept=".pdf,.doc,.docx,.xlsx">
+            <div class="file-input-label">
+              <span class="material-icons">upload_file</span>
+              Choose file (PDF, DOC, XLSX)
+            </div>
+          </div>
+          <div id="essayPreview" class="file-preview"></div>
+        </div>
+        <button onclick="process('grade')" class="btn">
+          <span class="material-icons">grading</span>
+          Grade Assignment
+        </button>
+        <div id="gradeOut" class="output"></div>
+      </div>
+    </div>
+
+    <div id="summarize" class="tool-section">
+      <div class="page-header">
+        <h1 class="page-title">
+          <span class="material-icons">summarize</span>
+          Summarize Articles or Lectures
+        </h1>
+      </div>
+      <div class="card">
+        <div class="card-header">
+          <p class="card-description">Paste article or transcript or upload a file to generate a concise summary.</p>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Content to Summarize</label>
+          <textarea id="summaryInput" class="form-textarea" placeholder="Paste article or transcript or upload a file..."></textarea>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Upload File</label>
+          <div class="file-input">
+            <input type="file" id="summaryFile" accept=".pdf,.doc,.docx,.xlsx">
+            <div class="file-input-label">
+              <span class="material-icons">upload_file</span>
+              Choose file (PDF, DOC, XLSX)
+            </div>
+          </div>
+          <div id="summaryPreview" class="file-preview"></div>
+        </div>
+        <button onclick="process('summarize')" class="btn">
+          <span class="material-icons">summarize</span>
+          Generate Summary
+        </button>
+        <div id="summaryOut" class="output"></div>
+      </div>
+    </div>
+
+    <div id="plagiarism" class="tool-section">
+      <div class="page-header">
+        <h1 class="page-title">
+          <span class="material-icons">search</span>
+          Plagiarism / AI Writing Check
+        </h1>
+      </div>
+      <div class="card">
+        <div class="card-header">
+          <p class="card-description">Paste or upload student work to check for authenticity.</p>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Student Work</label>
+          <textarea id="plagInput" class="form-textarea" placeholder="Paste student's work or upload a file..."></textarea>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Upload File</label>
+          <div class="file-input">
+            <input type="file" id="plagFile" accept=".pdf,.doc,.docx,.xlsx">
+            <div class="file-input-label">
+              <span class="material-icons">upload_file</span>
+              Choose file (PDF, DOC, XLSX)
+            </div>
+          </div>
+          <div id="plagPreview" class="file-preview"></div>
+        </div>
+        <button onclick="process('plagiarism')" class="btn">
+          <span class="material-icons">search</span>
+          Check Authenticity
+        </button>
+        <div id="plagOut" class="output"></div>
+      </div>
+    </div>
+
+    <div id="simplify" class="tool-section">
+      <div class="page-header">
+        <h1 class="page-title">
+          <span class="material-icons">accessibility</span>
+          IEP-Aware Text Rewriting
+        </h1>
+      </div>
+      <div class="card">
+        <div class="card-header">
+          <p class="card-description">Paste or upload a complex paragraph to simplify for accessibility.</p>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Complex Text</label>
+          <textarea id="iepInput" class="form-textarea" placeholder="Paste complex paragraph or upload a file..."></textarea>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Upload File</label>
+          <div class="file-input">
+            <input type="file" id="iepFile" accept=".pdf,.doc,.docx,.xlsx">
+            <div class="file-input-label">
+              <span class="material-icons">upload_file</span>
+              Choose file (PDF, DOC, XLSX)
+            </div>
+          </div>
+          <div id="iepPreview" class="file-preview"></div>
+        </div>
+        <button onclick="process('simplify')" class="btn">
+          <span class="material-icons">accessibility</span>
+          Simplify for Accessibility
+        </button>
+        <div id="iepOut" class="output"></div>
+      </div>
+    </div>
+
+    <div id="rubric" class="tool-section">
+      <div class="page-header">
+        <h1 class="page-title">
+          <span class="material-icons">assignment</span>
+          Rubric / Assignment Generator
+        </h1>
+      </div>
+      <div class="card">
+        <div class="card-header">
+          <p class="card-description">Describe the task or upload a file to generate a detailed rubric.</p>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Assignment Description</label>
+          <textarea id="rubricInput" class="form-textarea" placeholder="Describe the task or upload a file..."></textarea>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Upload File</label>
+          <div class="file-input">
+            <input type="file" id="rubricFile" accept=".pdf,.doc,.docx,.xlsx">
+            <div class="file-input-label">
+              <span class="material-icons">upload_file</span>
+              Choose file (PDF, DOC, XLSX)
+            </div>
+          </div>
+          <div id="rubricPreview" class="file-preview"></div>
+        </div>
+        <button onclick="process('rubric')" class="btn">
+          <span class="material-icons">assignment</span>
+          Generate Rubric
+        </button>
+        <div id="rubricOut" class="output"></div>
+      </div>
+    </div>
+
+    <div id="report" class="tool-section">
+      <div class="page-header">
+        <h1 class="page-title">
+          <span class="material-icons">report</span>
+          Report Card Comment Generator
+        </h1>
+      </div>
+      <div class="card">
+        <div class="card-header">
+          <p class="card-description">Provide a performance summary or upload a file to generate a professional comment.</p>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Performance Summary</label>
+          <textarea id="reportInput" class="form-textarea" placeholder="Student's performance summary or upload a file..."></textarea>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Upload File</label>
+          <div class="file-input">
+            <input type="file" id="reportFile" accept=".pdf,.doc,.docx,.xlsx">
+            <div class="file-input-label">
+              <span class="material-icons">upload_file</span>
+              Choose file (PDF, DOC, XLSX)
+            </div>
+          </div>
+          <div id="reportPreview" class="file-preview"></div>
+        </div>
+        <button onclick="process('report')" class="btn">
+          <span class="material-icons">report</span>
+          Generate Comment
+        </button>
+        <div id="reportOut" class="output"></div>
+      </div>
+    </div>
+
+    <div id="curriculum" class="tool-section">
+      <div class="page-header">
+        <h1 class="page-title">
+          <span class="material-icons">book</span>
+          Curriculum Gap Analyzer
+        </h1>
+      </div>
+      <div class="card">
+        <div class="card-header">
+          <p class="card-description">Paste or upload current topics/lessons to identify missing objectives.</p>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Current Curriculum</label>
+          <textarea id="curriculumInput" class="form-textarea" placeholder="Paste your current topics/lessons or upload a file..."></textarea>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Upload File</label>
+          <div class="file-input">
+            <input type="file" id="curriculumFile" accept=".pdf,.doc,.docx,.xlsx">
+            <div class="file-input-label">
+              <span class="material-icons">upload_file</span>
+              Choose file (PDF, DOC, XLSX)
+            </div>
+          </div>
+          <div id="curriculumPreview" class="file-preview"></div>
+        </div>
+        <button onclick="process('curriculum')" class="btn">
+          <span class="material-icons">book</span>
+          Analyze Gaps
+        </button>
+        <div id="curriculumOut" class="output"></div>
+      </div>
+    </div>
+
+    <div id="lesson" class="tool-section">
+      <div class="page-header">
+        <h1 class="page-title">
+          <span class="material-icons">event_note</span>
+          Lesson Plan Generator
+        </h1>
+      </div>
+      <div class="card">
+        <div class="card-header">
+          <p class="card-description">Specify a topic or subject to create a structured lesson plan.</p>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Lesson Topic</label>
+          <textarea id="lessonInput" class="form-textarea" placeholder="Topic or subject to create lesson plan for or upload a file..."></textarea>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Upload File</label>
+          <div class="file-input">
+            <input type="file" id="lessonFile" accept=".pdf,.doc,.docx,.xlsx">
+            <div class="file-input-label">
+              <span class="material-icons">upload_file</span>
+              Choose file (PDF, DOC, XLSX)
+            </div>
+          </div>
+          <div id="lessonPreview" class="file-preview"></div>
+        </div>
+        <button onclick="process('lesson')" class="btn">
+          <span class="material-icons">event_note</span>
+          Generate Lesson Plan
+        </button>
+        <div id="lessonOut" class="output"></div>
+      </div>
+    </div>
+
+    <div id="history" class="tool-section">
+      <div class="page-header">
+        <h1 class="page-title">
+          <span class="material-icons">history</span>
+          Complete History
+        </h1>
+        <div class="sort-controls">
+          <button class="sort-button" id="sort-name" onclick="sortHistory('name')">Sort by Name</button>
+          <button class="sort-button" id="sort-date" onclick="sortHistory('date')">Sort by Date</button>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header">
+          <p class="card-description">All your AI tool usage history</p>
+        </div>
+        <ul id="fullHistoryList" class="history-list"></ul>
+        <div id="historyLoading" style="display: none;">
+          <div class="loading-bar"><div class="loading-bar-fill"></div></div>
+          <div class="loading-bar"><div class="loading-bar-fill"></div></div>
+          <div class="loading-bar"><div class="loading-bar-fill"></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modals -->
+  <div id="textPreviewModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title">Extracted Text Preview</h3>
+      </div>
+      <div class="form-group">
+        <textarea id="textPreview" class="form-textarea" style="min-height: 200px;"></textarea>
+      </div>
+      <div class="modal-actions">
+        <button onclick="confirmText()" class="btn">Confirm and Process</button>
+        <button onclick="closeModal('textPreviewModal')" class="btn" style="background: #666666;">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="storeModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title">Store in Your Account?</h3>
+        <p class="card-description">Would you like to save this output to your account for later access?</p>
+      </div>
+      <div class="form-group">
+        <input type="text" id="outputName" class="form-input" placeholder="Enter a memorable name for this output">
+      </div>
+      <div class="modal-actions">
+        <button onclick="storeOutput()" class="btn">Yes, Store</button>
+        <button onclick="closeModal('storeModal')" class="btn" style="background: #666666;">No, Skip</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="viewResponseModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title">View Response</h3>
+      </div>
+      <div class="form-group">
+        <textarea id="viewResponseContent" class="form-textarea" readonly style="min-height: 300px;"></textarea>
+      </div>
+      <div class="modal-actions">
+        <button onclick="closeModal('viewResponseModal')" class="btn">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-analytics-compat.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.4.2/mammoth.browser.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+  <script>
+    // Set PDF.js worker after library is loaded
+    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.worker.min.js';
+
+    // Firebase configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyAjhNgYvGYtmM-QtjsN_VhU8u9ILiPqW9M",
+      authDomain: "auralis-7ba3c.firebaseapp.com",
+      projectId: "auralis-7ba3c",
+      storageBucket: "auralis-7ba3c.firebasestorage.app",
+      messagingSenderId: "168814384926",
+      appId: "1:168814384926:web:fa6fb8a74ae2a4f0c75b0f",
+      measurementId: "G-06NWD0ZEYB"
+    };
+
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.firestore();
+    firebase.analytics();
+
+    // Map input and file elements
+    const inputMap = {
+      grade: { text: 'essayInput', file: 'essayFile', preview: 'essayPreview' },
+      summarize: { text: 'summaryInput', file: 'summaryFile', preview: 'summaryPreview' },
+      plagiarism: { text: 'plagInput', file: 'plagFile', preview: 'plagPreview' },
+      simplify: { text: 'iepInput', file: 'iepFile', preview: 'iepPreview' },
+      rubric: { text: 'rubricInput', file: 'rubricFile', preview: 'rubricPreview' },
+      report: { text: 'reportInput', file: 'reportFile', preview: 'reportPreview' },
+      curriculum: { text: 'curriculumInput', file: 'curriculumFile', preview: 'curriculumPreview' },
+      lesson: { text: 'lessonInput', file: 'lessonFile', preview: 'lessonPreview' }
+    };
+
+    const outMap = {
+      grade: 'gradeOut',
+      summarize: 'summaryOut',
+      plagiarism: 'plagOut',
+      simplify: 'iepOut',
+      rubric: 'rubricOut',
+      report: 'reportOut',
+      curriculum: 'curriculumOut',
+      lesson: 'lessonOut'
+    };
+
+    const promptTemplates = {
+      grade: (text, criteria) => `Grade this student answer based on these criteria:\n${criteria || 'Content accuracy (40%), Clarity and organization (30%), Grammar and spelling (20%), Creativity (10%).'}\nProvide a score (0-100) and brief feedback for each criterion.\nStudent answer:\n${text}`,
+      summarize: text => `Summarize this for a student:\n${text}`,
+      plagiarism: text => `Check if this text was likely written by a human, AI, or copied:\n${text}`,
+      simplify: text => `Rewrite this in simple, accessible English:\n${text}`,
+      rubric: text => `Create a full assignment description and a grading rubric for:\n${text}`,
+      report: text => `Write a professional and positive report card comment for:\n${text}`,
+      curriculum: text => `Given this curriculum, identify any missing important topics or learning objectives:\n${text}`,
+      lesson: text => `Generate a structured lesson plan for:\n${text}`
+    };
+
+    let currentType = null;
+    let currentOutput = null;
+    let currentUser = null;
+    const history = [];
+    let usageChart = null;
+    let currentSort = 'date';
+    let sortOrder = 'desc';
+
+    // Initialize usage chart
+    function initUsageChart() {
+      const ctx = document.getElementById('usageChart');
+      if (!ctx) return;
+      
+      const labels = [];
+      const data = new Array(7).fill(0);
+      const today = new Date();
+      
+      for (let i = 6; i >= 0; i--) {
+        const date = new Date(today);
+        date.setDate(date.getDate() - i);
+        labels.push(date.toLocaleDateString('en-US', { weekday: 'short' }));
+      }
+
+      history.forEach(item => {
+        const itemDate = new Date(item.timestamp);
+        const diffDays = Math.floor((today - itemDate) / (1000 * 60 * 60 * 24));
+        if (diffDays >= 0 && diffDays < 7) {
+          data[6 - diffDays]++;
+        }
+      });
+
+      if (usageChart) {
+        usageChart.destroy();
+      }
+
+      usageChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: labels,
+          datasets: [{
+            label: 'API Calls',
+            data: data,
+            borderColor: 'rgb(63, 159, 255)',
+            backgroundColor: 'rgba(63, 159, 255, 0.1)',
+            borderWidth: 2,
+            fill: true,
+            tension: 0.4
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              display: false
+            }
+          },
+          scales: {
+            x: {
+              grid: {
+                color: '#333333'
+              },
+              ticks: {
+                color: '#aaaaaa',
+                font: {
+                  family: 'Google Sans'
+                }
+              }
+            },
+            y: {
+              grid: {
+                color: '#333333'
+              },
+              ticks: {
+                color: '#aaaaaa',
+                font: {
+                  family: 'Google Sans'
+                },
+                beginAtZero: true
+              }
+            }
+          }
+        }
+      });
+    }
+
+    // Update profile information
+    function updateProfileInfo(user) {
+      if (!user) return;
+
+      const profileName = document.getElementById('profileName');
+      const profileEmail = document.getElementById('profileEmail');
+      const profileJoinDate = document.getElementById('profileJoinDate');
+      const profileAvatarLarge = document.getElementById('profileAvatarLarge');
+      const profileFullName = document.getElementById('profileFullName');
+      const profileEmailDetail = document.getElementById('profileEmailDetail');
+      const profileAccountId = document.getElementById('profileAccountId');
+      const profileMemberSince = document.getElementById('profileMemberSince');
+      const profileLastLogin = document.getElementById('profileLastLogin');
+      const totalApiCalls = document.getElementById('totalApiCalls');
+      const toolsUsed = document.getElementById('toolsUsed');
+      const totalSpend = document.getElementById('totalSpend');
+      const avgDaily = document.getElementById('avgDaily');
+      const mostUsedTool = document.getElementById('mostUsedTool');
+      const thisMonthUsage = document.getElementById('thisMonthUsage');
+      const lastWeekUsage = document.getElementById('lastWeekUsage');
+      const todayUsage = document.getElementById('todayUsage');
+
+      // Basic profile info
+      profileName.textContent = user.displayName || 'User Name';
+      profileEmail.textContent = user.email || 'user@example.com';
+      profileFullName.textContent = user.displayName || 'Not provided';
+      profileEmailDetail.textContent = user.email || 'Not provided';
+      profileAccountId.textContent = user.uid.substring(0, 8) + '...';
+      
+      // Profile avatar
+      profileAvatarLarge.src = user.photoURL || 'https://via.placeholder.com/120x120/3F9FFF/ffffff?text=' + (user.displayName ? user.displayName.charAt(0) : 'U');
+      
+      // Join date (using creation time if available, otherwise current date)
+      const joinDate = user.metadata.creationTime ? new Date(user.metadata.creationTime) : new Date();
+      profileJoinDate.textContent = `Member since: ${joinDate.toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}`;
+      profileMemberSince.textContent = joinDate.toLocaleDateString();
+      
+      // Last login
+      const lastLogin = user.metadata.lastSignInTime ? new Date(user.metadata.lastSignInTime) : new Date();
+      profileLastLogin.textContent = lastLogin.toLocaleDateString();
+
+      // Usage statistics
+      const totalCalls = history.length;
+      totalApiCalls.textContent = totalCalls;
+      
+      // Calculate unique tools used
+      const uniqueTools = [...new Set(history.map(item => item.type))];
+      toolsUsed.textContent = uniqueTools.length;
+      
+      // Total spend (placeholder)
+      totalSpend.textContent = '$0.00';
+      
+      // Average daily usage
+      const daysSinceJoin = Math.max(1, Math.floor((new Date() - joinDate) / (1000 * 60 * 60 * 24)));
+      avgDaily.textContent = Math.round(totalCalls / daysSinceJoin);
+      
+      // Most used tool
+      if (history.length > 0) {
+        const toolCounts = {};
+        history.forEach(item => {
+          toolCounts[item.type] = (toolCounts[item.type] || 0) + 1;
+        });
+        const mostUsed = Object.keys(toolCounts).reduce((a, b) => toolCounts[a] > toolCounts[b] ? a : b);
+        mostUsedTool.textContent = mostUsed.charAt(0).toUpperCase() + mostUsed.slice(1);
+      } else {
+        mostUsedTool.textContent = 'None yet';
+      }
+      
+      // Time-based usage
+      const now = new Date();
+      const thisMonth = history.filter(item => {
+        const itemDate = new Date(item.timestamp);
+        return itemDate.getMonth() === now.getMonth() && itemDate.getFullYear() === now.getFullYear();
+      }).length;
+      thisMonthUsage.textContent = `${thisMonth} calls`;
+      
+      const lastWeek = history.filter(item => {
+        const itemDate = new Date(item.timestamp);
+        const diffDays = Math.floor((now - itemDate) / (1000 * 60 * 60 * 24));
+        return diffDays <= 7;
+      }).length;
+      lastWeekUsage.textContent = `${lastWeek} calls`;
+      
+      const today = history.filter(item => {
+        const itemDate = new Date(item.timestamp);
+        return itemDate.toDateString() === now.toDateString();
+      }).length;
+      todayUsage.textContent = `${today} calls`;
+    }
+
+    // Authentication state listener
+    auth.onAuthStateChanged(user => {
+      const welcomeTitle = document.getElementById('welcomeTitle');
+      const googleSignInBtn = document.getElementById('googleSignInBtn');
+      const signOutBtn = document.getElementById('signOutBtn');
+      const deleteAccountBtn = document.getElementById('deleteAccountBtn');
+      const accountId = document.getElementById('accountId');
+      const userDropdown = document.getElementById('userDropdown');
+      const userAvatar = document.getElementById('userAvatar');
+      const userName = document.getElementById('userName');
+
+      if (user) {
+        currentUser = user;
+        welcomeTitle.textContent = `Welcome ${user.displayName || 'User'}!`;
+        accountId.textContent = user.uid.substring(0, 8) + '...';
+        
+        googleSignInBtn.style.display = 'none';
+        userDropdown.style.display = 'block';
+        
+        userAvatar.src = user.photoURL || 'https://via.placeholder.com/32x32/3F9FFF/ffffff?text=' + (user.displayName ? user.displayName.charAt(0) : 'U');
+        userName.textContent = user.displayName || 'User';
+
+        setTimeout(initUsageChart, 100);
+        updateProfileInfo(user);
+
+        db.collection('users').doc(user.uid).set({
+          name: user.displayName || 'Anonymous',
+          email: user.email || '',
+          photoURL: user.photoURL || '',
+          createdAt: firebase.firestore.FieldValue.serverTimestamp()
+        }, { merge: true }).catch(err => {
+          console.error('Error storing user data:', err);
+        });
+
+        loadUserHistory(user.uid);
+      } else {
+        currentUser = null;
+        welcomeTitle.textContent = 'Welcome!';
+        accountId.textContent = '-';
+        googleSignInBtn.style.display = 'flex';
+        userDropdown.style.display = 'none';
+        history.length = 0;
+        updateHistoryList();
+        updateRecentHistoryList();
+      }
+    });
+
+    function toggleUserDropdown() {
+      const menu = document.getElementById('userDropdownMenu');
+      menu.classList.toggle('show');
+    }
+
+    document.addEventListener('click', function(event) {
+      const dropdown = document.getElementById('userDropdown');
+      const menu = document.getElementById('userDropdownMenu');
+      if (!dropdown.contains(event.target)) {
+        menu.classList.remove('show');
+      }
+    });
+
+    document.getElementById('googleSignInBtn').addEventListener('click', () => {
+      const provider = new firebase.auth.GoogleAuthProvider();
+      provider.addScope('profile');
+      provider.addScope('email');
+      auth.signInWithPopup(provider).catch(err => {
+        console.error('Sign-in error:', err);
+        alert('Failed to sign in with Google: ' + err.message);
+      });
+    });
+
+    document.getElementById('signOutBtn').addEventListener('click', () => {
+      auth.signOut().catch(err => {
+        console.error('Sign-out error:', err);
+        alert('Failed to sign out: ' + err.message);
+      });
+    });
+
+    document.getElementById('deleteAccountBtn').addEventListener('click', () => {
+      if (confirm('Are you sure you want to delete your account and all associated data? This cannot be undone.')) {
+        const user = auth.currentUser;
+        if (user) {
+          db.collection('users').doc(user.uid).delete().then(() => {
+            db.collection('history').where('userId', '==', user.uid).get().then(snapshot => {
+              const batch = db.batch();
+              snapshot.forEach(doc => batch.delete(doc.ref));
+              return batch.commit();
+            }).then(() => {
+              user.delete().then(() => {
+                alert('Account deleted successfully.');
+              }).catch(err => {
+                console.error('Error deleting account:', err);
+                alert('Failed to delete account: ' + err.message);
+              });
+            }).catch(err => {
+              console.error('Error deleting history:', err);
+              alert('Failed to delete history: ' + err.message);
+            });
+          }).catch(err => {
+            console.error('Error deleting user data:', err);
+            alert('Failed to delete user data: ' + err.message);
+          });
+        }
+      }
+    });
+
+    function loadUserHistory(userId) {
+      console.log('Loading history for userId:', userId);
+      const historyLoading = document.getElementById('historyLoading');
+      if (historyLoading) historyLoading.style.display = 'block';
+      
+      db.collection('history').where('userId', '==', userId).orderBy('timestamp', 'desc').get()
+        .then(snapshot => {
+          console.log('Retrieved', snapshot.size, 'history documents');
+          history.length = 0;
+          snapshot.forEach(doc => {
+            const data = doc.data();
+            console.log('History document:', data);
+            history.push({
+              id: doc.id,
+              type: data.type,
+              output: data.output,
+              timestamp: data.timestamp.toDate().toLocaleString(),
+              name: data.name
+            });
+          });
+          if (historyLoading) historyLoading.style.display = 'none';
+          updateHistoryList();
+          updateRecentHistoryList();
+          updateApiCallsCount();
+          initUsageChart();
+          if (currentUser) updateProfileInfo(currentUser);
+        })
+        .catch(err => {
+          console.error('Error loading history:', err);
+          if (historyLoading) historyLoading.style.display = 'none';
+          alert('Failed to load history: ' + err.message);
+        });
+    }
+
+    function updateApiCallsCount() {
+      document.getElementById('apiCallsCount').textContent = history.length;
+    }
+
+    function sortHistory(key) {
+      const sortNameBtn = document.getElementById('sort-name');
+      const sortDateBtn = document.getElementById('sort-date');
+      
+      if (currentSort === key) {
+        sortOrder = sortOrder === 'asc' ? 'desc' : 'asc';
+      } else {
+        currentSort = key;
+        sortOrder = key === 'date' ? 'desc' : 'asc';
+      }
+
+      sortNameBtn.classList.toggle('active', currentSort === 'name');
+      sortDateBtn.classList.toggle('active', currentSort === 'date');
+
+      history.sort((a, b) => {
+        if (key === 'name') {
+          return sortOrder === 'asc' 
+            ? a.name.localeCompare(b.name)
+            : b.name.localeCompare(a.name);
+        } else {
+          const dateA = new Date(a.timestamp);
+          const dateB = new Date(b.timestamp);
+          return sortOrder === 'asc' 
+            ? dateA - dateB
+            : dateB - dateA;
+        }
+      });
+
+      updateHistoryList();
+      updateRecentHistoryList();
+    }
+
+    function toggleSidebar() {
+      const sidebar = document.getElementById('sidebar');
+      const mainContent = document.getElementById('mainContent');
+      
+      sidebar.classList.toggle('hidden');
+      mainContent.classList.toggle('full-width');
+    }
+
+    function showTool(type) {
+      document.querySelectorAll('.tool-section').forEach(section => {
+        section.classList.remove('active');
+      });
+      
+      document.querySelectorAll('.sidebar-nav a').forEach(a => {
+        a.classList.remove('active');
+      });
+      
+      document.getElementById(type).classList.add('active');
+      
+      // Handle profile navigation (no sidebar nav for profile)
+      if (type !== 'profile') {
+        document.getElementById(`nav-${type}`).classList.add('active');
+      }
+      
+      if (window.innerWidth <= 768) {
+        document.getElementById('sidebar').classList.add('hidden');
+        document.getElementById('mainContent').classList.add('full-width');
+      }
+    }
+
+    // Export user data function
+    function exportUserData() {
+      if (!currentUser) {
+        alert('Please sign in to export your data.');
+        return;
+      }
+
+      const userData = {
+        profile: {
+          name: currentUser.displayName || 'Not provided',
+          email: currentUser.email || 'Not provided',
+          accountId: currentUser.uid,
+          memberSince: currentUser.metadata.creationTime || new Date().toISOString(),
+          lastLogin: currentUser.metadata.lastSignInTime || new Date().toISOString()
+        },
+        usage: {
+          totalApiCalls: history.length,
+          toolsUsed: [...new Set(history.map(item => item.type))].length,
+          history: history
+        },
+        exportDate: new Date().toISOString()
+      };
+
+      const blob = new Blob([JSON.stringify(userData, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `ai-tools-data-${currentUser.uid.substring(0, 8)}-${new Date().toISOString().split('T')[0]}.json`;
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    Object.keys(inputMap).forEach(type => {
+      const fileInput = document.getElementById(inputMap[type].file);
+      const textArea = document.getElementById(inputMap[type].text);
+      const previewDiv = document.getElementById(inputMap[type].preview);
+
+      if (fileInput) {
+        fileInput.addEventListener('change', async (event) => {
+          const file = event.target.files[0];
+          if (!file) return;
+
+          previewDiv.textContent = "⏳ Extracting text from file...";
+          try {
+            let extractedText = await extractTextFromFile(file);
+            textArea.value = extractedText;
+            previewDiv.textContent = `File loaded: ${file.name} (Extracted text displayed in textarea)`;
+          } catch (err) {
+            previewDiv.textContent = `❌ Error extracting text: ${err.message}`;
+            textArea.value = '';
+          }
+        });
+      }
+    });
+
+    async function extractTextFromFile(file) {
+      const fileType = file.name.split('.').pop().toLowerCase();
+      const maxFileSize = 5 * 1024 * 1024;
+
+      if (file.size > maxFileSize) {
+        throw new Error("File size exceeds 5MB limit.");
+      }
+
+      let text;
+      if (fileType === 'pdf') {
+        text = await extractTextFromPDF(file);
+      } else if (['doc', 'docx'].includes(fileType)) {
+        text = await extractTextFromDOC(file);
+      } else if (fileType === 'xlsx') {
+        text = await extractTextFromXLSX(file);
+      } else {
+        throw new Error("Unsupported file type. Please upload a PDF, DOC/DOCX, or XLSX file.");
+      }
+
+      if (text.split(/\s+/).length < 10) {
+        throw new Error("Extracted text is too short to process meaningfully.");
+      }
+
+      return text;
+    }
+
+    async function extractTextFromPDF(file) {
+      const arrayBuffer = await file.arrayBuffer();
+      const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+      let text = '';
+
+      for (let i = 1; i <= pdf.numPages; i++) {
+        const page = await pdf.getPage(i);
+        const content = await page.getTextContent();
+        text += content.items.map(item => item.str).join(' ') + '\n';
+      }
+
+      text = text.trim();
+      if (!text || text.length < 50) {
+        throw new Error("No meaningful text extracted. Ensure the PDF contains selectable text, not images.");
+      }
+      return text;
+    }
+
+    async function extractTextFromDOC(file) {
+      const arrayBuffer = await file.arrayBuffer();
+      const result = await mammoth.extractRawText({ arrayBuffer });
+      const text = result.value.trim();
+      if (!text || text.length < 50) {
+        throw new Error("No meaningful text extracted from the document.");
+      }
+      return text;
+    }
+
+    async function extractTextFromXLSX(file) {
+      const arrayBuffer = await file.arrayBuffer();
+      const workbook = XLSX.read(arrayBuffer, { type: 'array' });
+      let text = '';
+
+      workbook.SheetNames.forEach(sheetName => {
+        const sheet = workbook.Sheets[sheetName];
+        const jsonData = XLSX.utils.sheet_to_json(sheet, { header: 1 });
+        text += `Sheet: ${sheetName}\n` + jsonData.map(row => row.join(' | ')).join('\n') + '\n';
+      });
+
+      text = text.trim();
+      if (!text) {
+        throw new Error("No meaningful text extracted from the spreadsheet.");
+      }
+      return text;
+    }
+
+    async function process(type) {
+      if (!currentUser) {
+        alert('Please sign in to use this feature.');
+        return;
+      }
+      currentType = type;
+      const input = document.getElementById(inputMap[type].text).value.trim();
+      const output = document.getElementById(outMap[type]);
+
+      if (!input) {
+        return alert("Please provide input by pasting text or uploading a file.");
+      }
+
+      document.getElementById('textPreview').value = input;
+      document.getElementById('textPreviewModal').classList.add('show');
+    }
+
+    async function confirmText() {
+      const input = document.getElementById('textPreview').value.trim();
+      const output = document.getElementById(outMap[currentType]);
+      let criteria = '';
+
+      if (currentType === 'grade') {
+        criteria = document.getElementById('essayCriteria')?.value.trim();
+      }
+
+      document.getElementById('textPreviewModal').classList.remove('show');
+      output.textContent = "⏳ Processing...";
+
+      try {
+        const res = await fetch("https://api.fireworks.ai/inference/v1/completions", {
+          method: "POST",
+          headers: {
+            "Authorization": "Bearer fw_3ZWXAxAD6BWE4pgQkvkAqem3",
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            model: "accounts/fireworks/models/llama-v3p1-405b-instruct",
+            prompt: currentType === 'grade' ? promptTemplates[currentType](input, criteria) : promptTemplates[currentType](input),
+            max_tokens: 1024,
+            temperature: 0.2,
+            top_p: 0.95
+          })
+        });
+
+        if (!res.ok) {
+          throw new Error(`API request failed: ${res.status} ${res.statusText}`);
+        }
+
+        const data = await res.json();
+        if (!data.choices?.[0]?.text) {
+          throw new Error("No valid response from the API.");
+        }
+
+        currentOutput = data.choices[0].text.trim();
+        output.textContent = currentOutput;
+        document.getElementById('storeModal').classList.add('show');
+      } catch (err) {
+        output.textContent = `❌ Error: ${err.message}. Please check the file content or try again later.`;
+      }
+    }
+
+    function storeOutput() {
+      if (currentOutput && currentUser) {
+        const timestamp = new Date();
+        const name = document.getElementById('outputName').value.trim() || `${currentType.charAt(0).toUpperCase() + currentType.slice(1)} ${timestamp.toLocaleString()}`;
+        const historyItem = {
+          userId: currentUser.uid,
+          type: currentType,
+          output: currentOutput,
+          timestamp: firebase.firestore.Timestamp.fromDate(timestamp),
+          name
+        };
+        console.log('Storing history item:', historyItem);
+        db.collection('history').add(historyItem)
+          .then(docRef => {
+            console.log('History stored with ID:', docRef.id);
+            history.unshift({
+              id: docRef.id,
+              type: currentType,
+              output: currentOutput,
+              timestamp: timestamp.toLocaleString(),
+              name
+            });
+            updateHistoryList();
+            updateRecentHistoryList();
+            updateApiCallsCount();
+            initUsageChart();
+            if (currentUser) updateProfileInfo(currentUser);
+            document.getElementById('storeModal').classList.remove('show');
+            document.getElementById('outputName').value = '';
+          })
+          .catch(err => {
+            console.error('Error storing history:', err);
+            alert('Failed to store history: ' + err.message);
+          });
+      }
+    }
+
+    function updateRecentHistoryList() {
+      const recentHistoryList = document.getElementById('recentHistoryList');
+      recentHistoryList.innerHTML = '';
+      
+      const recentHistory = history.slice(0, 2);
+      
+      if (recentHistory.length === 0) {
+        const li = document.createElement('li');
+        li.className = 'history-item';
+        li.innerHTML = '<div class="history-item-info"><div class="history-item-name">No recent history available</div></div>';
+        recentHistoryList.appendChild(li);
+        return;
+      }
+      
+      recentHistory.forEach(item => {
+        const li = document.createElement('li');
+        li.className = 'history-item';
+        
+        li.innerHTML = `
+          <div class="history-item-info">
+            <div class="history-item-name">${item.name}</div>
+            <div class="history-item-date">${item.timestamp}</div>
+          </div>
+          <div class="history-item-actions">
+            <button class="btn btn-sm" onclick="viewResponse(\`${item.output.replace(/`/g, '\\`')}\`, '${item.name}')">
+              <span class="material-icons" style="font-size: 1rem;">visibility</span>
+              View
+            </button>
+            <button class="btn btn-sm" onclick="downloadOutput(\`${item.output.replace(/`/g, '\\`')}\`, '${item.type}', '${item.name}')">
+              <span class="material-icons" style="font-size: 1rem;">download</span>
+              Download
+            </button>
+            <button class="btn btn-danger btn-sm" onclick="deleteHistoryItem('${item.id}', '${item.name}')">
+              <span class="material-icons" style="font-size: 1rem;">delete</span>
+              Delete
+            </button>
+          </div>
+        `;
+        
+        recentHistoryList.appendChild(li);
+      });
+    }
+
+    function updateHistoryList() {
+      const fullHistoryList = document.getElementById('fullHistoryList');
+      if (!fullHistoryList) return;
+      
+      fullHistoryList.innerHTML = '';
+      
+      if (history.length === 0) {
+        const li = document.createElement('li');
+        li.className = 'history-item';
+        li.innerHTML = '<div class="history-item-info"><div class="history-item-name">No history available</div></div>';
+        fullHistoryList.appendChild(li);
+        return;
+      }
+      
+      history.forEach(item => {
+        const li = document.createElement('li');
+        li.className = 'history-item';
+        
+        li.innerHTML = `
+          <div class="history-item-info">
+            <div class="history-item-name">${item.name}</div>
+            <div class="history-item-date">${item.timestamp}</div>
+          </div>
+          <div class="history-item-actions">
+            <button class="btn btn-sm" onclick="viewResponse(\`${item.output.replace(/`/g, '\\`')}\`, '${item.name}')">
+              <span class="material-icons" style="font-size: 1rem;">visibility</span>
+              View
+            </button>
+            <button class="btn btn-sm" onclick="downloadOutput(\`${item.output.replace(/`/g, '\\`')}\`, '${item.type}', '${item.name}')">
+              <span class="material-icons" style="font-size: 1rem;">download</span>
+              Download
+            </button>
+            <button class="btn btn-danger btn-sm" onclick="deleteHistoryItem('${item.id}', '${item.name}')">
+              <span class="material-icons" style="font-size: 1rem;">delete</span>
+              Delete
+            </button>
+          </div>
+        `;
+        
+        fullHistoryList.appendChild(li);
+      });
+    }
+
+    function viewResponse(output, name) {
+      document.getElementById('viewResponseContent').value = output;
+      document.getElementById('viewResponseModal').classList.add('show');
+    }
+
+    function deleteHistoryItem(historyId, name) {
+      if (confirm(`Are you sure you want to delete "${name}"? This cannot be undone.`)) {
+        db.collection('history').doc(historyId).delete()
+          .then(() => {
+            console.log(`Deleted history item: ${historyId}`);
+            const index = history.findIndex(item => item.id === historyId);
+            if (index !== -1) {
+              history.splice(index, 1);
+              updateHistoryList();
+              updateRecentHistoryList();
+              updateApiCallsCount();
+              initUsageChart();
+              if (currentUser) updateProfileInfo(currentUser);
+            }
+          })
+          .catch(err => {
+            console.error('Error deleting history item:', err);
+            alert('Failed to delete history item: ' + err.message);
+          });
+      }
+    }
+
+    function downloadOutput(output, type, name) {
+      const blob = new Blob([output], { type: 'text/plain' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `${name.replace(/[, :]/g, '-')}.txt`;
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    function closeModal(modalId) {
+      document.getElementById(modalId).classList.remove('show');
+      if (modalId === 'storeModal') {
+        document.getElementById('outputName').value = '';
+      }
+    }
+
+    window.addEventListener('resize', () => {
+      if (window.innerWidth > 768) {
+        document.getElementById('sidebar').classList.add('hidden');
+        document.getElementById('mainContent').classList.add('full-width');
+      }
+    });
+
+    showTool('accounts');
+  </script>
+</body>
+</html>
