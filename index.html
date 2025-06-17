@@ -11,11 +11,11 @@
       margin: 0;
       padding: 0;
       box-sizing: border-box;
-      scrollbar-width: none; /* Firefox */
+      scrollbar-width: none;
     }
 
     *::-webkit-scrollbar {
-      display: none; /* Chrome, Safari, Edge */
+      display: none;
     }
 
     body {
@@ -28,27 +28,28 @@
     }
 
     .sidebar {
-      width: 256px;
+      width: 64px;
       background: #000000;
       border-right: 1px solid #333333;
       padding: 1.5rem 0;
       height: 100vh;
       position: fixed;
       overflow-y: auto;
-      transition: transform 0.3s ease;
+      transition: width 0.3s ease;
       z-index: 100;
     }
 
-    .sidebar.hidden {
-      transform: translateX(-256px);
+    .sidebar:hover {
+      width: 256px;
     }
 
     .sidebar-header {
-      padding: 0 1.5rem 2rem;
+      padding: 0 1rem 1rem;
       border-bottom: 1px solid #333333;
       margin-bottom: 1rem;
       display: flex;
       align-items: center;
+      justify-content: center;
     }
 
     .sidebar-logo {
@@ -59,6 +60,12 @@
       font-size: 1.25rem;
       font-weight: 600;
       color: #ffffff;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .sidebar:hover .sidebar-logo {
+      opacity: 1;
     }
 
     .sidebar-logo img {
@@ -83,7 +90,7 @@
       display: flex;
       align-items: center;
       gap: 0.75rem;
-      padding: 0.75rem 0.75rem;
+      padding: 0.75rem;
       color: #aaaaaa;
       text-decoration: none;
       font-family: 'Google Sans', sans-serif;
@@ -107,34 +114,20 @@
       font-size: 1.25rem;
     }
 
-    .sidebar-toggle {
-      position: fixed;
-      top: 1rem;
-      left: 1rem;
-      background: #1a1a1a;
-      border: 1px solid #333333;
-      padding: 0.5rem;
-      border-radius: 0.5rem;
-      cursor: pointer;
-      z-index: 101;
-      color: #ffffff;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: all 0.2s ease;
+    .sidebar-nav .nav-text {
+      display: none;
     }
 
-    .sidebar-toggle:hover {
-      background: #2a2a2a;
-      border-color: #666666;
+    .sidebar:hover .nav-text {
+      display: inline;
     }
 
     .main-content {
-      margin-left: 256px;
+      margin-left: 64px;
       flex: 1;
       padding: 2rem;
       transition: margin-left 0.3s ease;
-      max-width: calc(100vw - 256px);
+      max-width: calc(100vw - 64px);
       background: #000000;
     }
 
@@ -201,7 +194,6 @@
       border: 1px solid #333333;
       border-radius: 0.5rem;
       min-width: 200px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
       z-index: 1000;
       display: none;
       margin-top: 0.5rem;
@@ -325,10 +317,8 @@
       border-radius: 1rem;
       padding: 2rem;
       margin-bottom: 1.5rem;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
     }
 
-    /* Remove borders for all generators except accounts */
     #grade .card,
     #summarize .card,
     #plagiarism .card,
@@ -339,7 +329,6 @@
     #lesson .card {
       background: transparent;
       border: none;
-      box-shadow: none;
     }
 
     #accounts .card {
@@ -350,7 +339,6 @@
     #history .card {
       background: transparent;
       border: none;
-      box-shadow: none;
       padding: 0;
     }
 
@@ -395,13 +383,12 @@
       font-size: 0.875rem;
       background: #2a2a2a;
       color: #ffffff;
-      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+      transition: border-color 0.2s ease;
     }
 
     .form-input:focus, .form-textarea:focus, .form-select:focus {
       outline: none;
       border-color: rgb(63, 159, 255);
-      box-shadow: 0 0 0 3px rgba(63, 159, 255, 0.2);
     }
 
     .form-textarea {
@@ -471,7 +458,7 @@
 
     .btn:hover {
       background: rgb(83, 179, 255);
-      transform: translateY(-1px);
+      transform: translateY strike(-1px);
     }
 
     .btn:disabled {
@@ -716,7 +703,6 @@
       color: #ffffff;
     }
 
-    /* Profile Page Styles */
     .profile-header {
       display: flex;
       align-items: center;
@@ -724,8 +710,8 @@
       margin-bottom: 2rem;
       padding: 2rem;
       background: linear-gradient(135deg, #1a1a1a, #2a2a2a);
-      border-radius: 1rem;
       border: 1px solid #333333;
+      border-radius: 1rem;
     }
 
     .profile-avatar-large {
@@ -836,11 +822,12 @@
 
     @media (max-width: 768px) {
       .sidebar {
-        transform: translateX(-256px);
+        width: 0;
+        overflow: hidden;
       }
 
-      .sidebar.show {
-        transform: translateX(0);
+      .sidebar:hover {
+        width: 256px;
       }
 
       .main-content {
@@ -896,66 +883,78 @@
   </style>
 </head>
 <body>
-  <button class="sidebar-toggle" onclick="toggleSidebar()">
-    <span class="material-icons">menu</span>
-  </button>
-
-  <div class="sidebar hidden" id="sidebar">
+  <div class="sidebar" id="sidebar">
     <div class="sidebar-header">
       <div class="sidebar-logo">
         <img src="Auralis.png" alt="Auralis Logo" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline';">
         <span class="material-icons" style="color: rgb(63, 159, 255); display: none;">school</span>
-        Auralis
+        <span class="nav-text">Auralis</span>
       </div>
     </div>
     <nav class="sidebar-nav">
       <ul>
         <li><a href="#" onclick="showTool('accounts')" class="active" id="nav-accounts">
           <span class="material-icons">home</span>
-          Home
+          <span class="nav-text">Home</span>
         </a></li>
         <li><a href="#" onclick="showTool('grade')" id="nav-grade">
           <span class="material-icons">grading</span>
-          Automatic Grading
+          <span class="nav-text">Automatic Grading</span>
         </a></li>
         <li><a href="#" onclick="showTool('summarize')" id="nav-summarize">
           <span class="material-icons">summarize</span>
-          Summarize Articles
+          <span class="nav-text">Summarize Articles</span>
         </a></li>
         <li><a href="#" onclick="showTool('plagiarism')" id="nav-plagiarism">
           <span class="material-icons">search</span>
-          Plagiarism Check
+          <span class="nav-text">Plagiarism Check</span>
         </a></li>
         <li><a href="#" onclick="showTool('simplify')" id="nav-simplify">
           <span class="material-icons">accessibility</span>
-          IEP-Aware Rewrite
+          <span class="nav-text">IEP-Aware Rewrite</span>
         </a></li>
         <li><a href="#" onclick="showTool('rubric')" id="nav-rubric">
           <span class="material-icons">assignment</span>
-          Rubric Generator
+          <span class="nav-text">Rubric Generator</span>
         </a></li>
         <li><a href="#" onclick="showTool('report')" id="nav-report">
           <span class="material-icons">report</span>
-          Report Card Comments
+          <span class="nav-text">Report Card Comments</span>
         </a></li>
         <li><a href="#" onclick="showTool('curriculum')" id="nav-curriculum">
           <span class="material-icons">book</span>
-          Curriculum Analyzer
+          <span class="nav-text">Curriculum Analyzer</span>
         </a></li>
         <li><a href="#" onclick="showTool('lesson')" id="nav-lesson">
           <span class="material-icons">event_note</span>
-          Lesson Plan Generator
+          <span class="nav-text">Lesson Plan Generator</span>
         </a></li>
         <li><a href="#" onclick="showTool('history')" id="nav-history">
           <span class="material-icons">history</span>
-          History
+          <span class="nav-text">History</span>
         </a></li>
       </ul>
     </nav>
   </div>
 
-  <div class="main-content full-width" id="mainContent">
-    <div id="accounts" class="tool-section active">
+  <div class="main-content" id="mainContent">
+    <div id="auth" class="tool-section">
+      <div class="page-header">
+        <h1 class="page-title">Sign In</h1>
+      </div>
+      <div class="welcome-card">
+        <h2 class="welcome-title">Please Sign In</h2>
+        <p class="welcome-subtitle">Access Auralis features by signing in with your Google account.</p>
+        <div class="welcome-actions">
+          <button class="btn-primary" id="googleSignInBtn">
+            <span class="material-icons">login</span>
+            Sign in with Google
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div id="accounts" class="tool-section">
       <div class="page-header">
         <h1 class="page-title">Home</h1>
         <div class="user-dropdown" id="userDropdown" style="display: none;">
@@ -989,10 +988,6 @@
         <h2 class="welcome-title" id="welcomeTitle">Welcome!</h2>
         <p class="welcome-subtitle">The fastest inference engine for building production-ready AI systems</p>
         <div class="welcome-actions">
-          <button class="btn-primary" id="googleSignInBtn">
-            <span class="material-icons">login</span>
-            Start building
-          </button>
           <a href="#" class="btn-secondary" onclick="showTool('grade')">Learn more</a>
         </div>
       </div>
@@ -1206,7 +1201,11 @@
           <span class="material-icons">grading</span>
           Grade Assignment
         </button>
-        <div id="gradeOut" class="output"></div>
+        <div id="gradeOut" class="output">
+          <div id="gradeLoading" class="loading-bar" style="display: none;">
+            <div class="loading-bar-fill"></div>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -1240,7 +1239,11 @@
           <span class="material-icons">summarize</span>
           Generate Summary
         </button>
-        <div id="summaryOut" class="output"></div>
+        <div id="summaryOut" class="output">
+          <div id="summaryLoading" class="loading-bar" style="display: none;">
+            <div class="loading-bar-fill"></div>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -1274,7 +1277,11 @@
           <span class="material-icons">search</span>
           Check Authenticity
         </button>
-        <div id="plagOut" class="output"></div>
+        <div id="plagOut" class="output">
+          <div id="plagLoading" class="loading-bar" style="display: none;">
+            <div class="loading-bar-fill"></div>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -1308,7 +1315,11 @@
           <span class="material-icons">accessibility</span>
           Simplify for Accessibility
         </button>
-        <div id="iepOut" class="output"></div>
+        <div id="iepOut" class="output">
+          <div id="iepLoading" class="loading-bar" style="display: none;">
+            <div class="loading-bar-fill"></div>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -1342,7 +1353,11 @@
           <span class="material-icons">assignment</span>
           Generate Rubric
         </button>
-        <div id="rubricOut" class="output"></div>
+        <div id="rubricOut" class="output">
+          <div id="rubricLoading" class="loading-bar" style="display: none;">
+            <div class="loading-bar-fill"></div>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -1376,7 +1391,11 @@
           <span class="material-icons">report</span>
           Generate Comment
         </button>
-        <div id="reportOut" class="output"></div>
+        <div id="reportOut" class="output">
+          <div id="reportLoading" class="loading-bar" style="display: none;">
+            <div class="loading-bar-fill"></div>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -1410,7 +1429,11 @@
           <span class="material-icons">book</span>
           Analyze Gaps
         </button>
-        <div id="curriculumOut" class="output"></div>
+        <div id="curriculumOut" class="output">
+          <div id="curriculumLoading" class="loading-bar" style="display: none;">
+            <div class="loading-bar-fill"></div>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -1444,7 +1467,11 @@
           <span class="material-icons">event_note</span>
           Generate Lesson Plan
         </button>
-        <div id="lessonOut" class="output"></div>
+        <div id="lessonOut" class="output">
+          <div id="lessonLoading" class="loading-bar" style="display: none;">
+            <div class="loading-bar-fill"></div>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -1465,8 +1492,6 @@
         </div>
         <ul id="fullHistoryList" class="history-list"></ul>
         <div id="historyLoading" style="display: none;">
-          <div class="loading-bar"><div class="loading-bar-fill"></div></div>
-          <div class="loading-bar"><div class="loading-bar-fill"></div></div>
           <div class="loading-bar"><div class="loading-bar-fill"></div></div>
         </div>
       </div>
@@ -1519,6 +1544,31 @@
     </div>
   </div>
 
+  <div id="errorModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title">Error</h3>
+      </div>
+      <p id="errorMessage" class="card-description"></p>
+      <div class="modal-actions">
+        <button onclick="closeModal('errorModal')" class="btn">OK</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="confirmModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title">Confirm Action</h3>
+      </div>
+      <p id="confirmMessage" class="card-description"></p>
+      <div class="modal-actions">
+        <button id="confirmYes" class="btn">Yes</button>
+        <button onclick="closeModal('confirmModal')" class="btn" style="background: #666666;">No</button>
+      </div>
+    </div>
+  </div>
+
   <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
@@ -1528,10 +1578,8 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
   <script>
-    // Set PDF.js worker after library is loaded
     pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.worker.min.js';
 
-    // Firebase configuration
     const firebaseConfig = {
       apiKey: "AIzaSyAjhNgYvGYtmM-QtjsN_VhU8u9ILiPqW9M",
       authDomain: "auralis-7ba3c.firebaseapp.com",
@@ -1542,22 +1590,20 @@
       measurementId: "G-06NWD0ZEYB"
     };
 
-    // Initialize Firebase
     firebase.initializeApp(firebaseConfig);
     const auth = firebase.auth();
     const db = firebase.firestore();
     firebase.analytics();
 
-    // Map input and file elements
     const inputMap = {
-      grade: { text: 'essayInput', file: 'essayFile', preview: 'essayPreview' },
-      summarize: { text: 'summaryInput', file: 'summaryFile', preview: 'summaryPreview' },
-      plagiarism: { text: 'plagInput', file: 'plagFile', preview: 'plagPreview' },
-      simplify: { text: 'iepInput', file: 'iepFile', preview: 'iepPreview' },
-      rubric: { text: 'rubricInput', file: 'rubricFile', preview: 'rubricPreview' },
-      report: { text: 'reportInput', file: 'reportFile', preview: 'reportPreview' },
-      curriculum: { text: 'curriculumInput', file: 'curriculumFile', preview: 'curriculumPreview' },
-      lesson: { text: 'lessonInput', file: 'lessonFile', preview: 'lessonPreview' }
+      grade: { text: 'essayInput', file: 'essayFile', preview: 'essayPreview', loading: 'gradeLoading' },
+      summarize: { text: 'summaryInput', file: 'summaryFile', preview: 'summaryPreview', loading: 'summaryLoading' },
+      plagiarism: { text: 'plagInput', file: 'plagFile', preview: 'plagPreview', loading: 'plagLoading' },
+      simplify: { text: 'iepInput', file: 'iepFile', preview: 'iepPreview', loading: 'iepLoading' },
+      rubric: { text: 'rubricInput', file: 'rubricFile', preview: 'rubricPreview', loading: 'rubricLoading' },
+      report: { text: 'reportInput', file: 'reportFile', preview: 'reportPreview', loading: 'reportLoading' },
+      curriculum: { text: 'curriculumInput', file: 'curriculumFile', preview: 'curriculumPreview', loading: 'curriculumLoading' },
+      lesson: { text: 'lessonInput', file: 'lessonFile', preview: 'lessonPreview', loading: 'lessonLoading' }
     };
 
     const outMap = {
@@ -1577,9 +1623,9 @@
       plagiarism: text => `Check if this text was likely written by a human, AI, or copied:\n${text}`,
       simplify: text => `Rewrite this in simple, accessible English:\n${text}`,
       rubric: text => `Create a full assignment description and a grading rubric for:\n${text}`,
-      report: text => `Write a professional and positive report card comment for:\n${text}`,
-      curriculum: text => `Given this curriculum, identify any missing important topics or learning objectives:\n${text}`,
-      lesson: text => `Generate a structured lesson plan for:\n${text}`
+      report: text => `Write a professional criticism for report card comment for:\n${text}`,
+      curriculum: text => `Given this curriculum, identify any missing important topics, gaps, or learning objectives:\n${text}`,
+      lesson: text => `Generate a structured and detailed lesson plan for:\n${text}`
     };
 
     let currentType = null;
@@ -1589,16 +1635,31 @@
     let usageChart = null;
     let currentSort = 'date';
     let sortOrder = 'desc';
+    let confirmCallback = null;
 
-    // Initialize usage chart
+    function showError(message) {
+      document.getElementById('errorMessage').textContent = message;
+      document.getElementById('errorModal').classList.add('show');
+    }
+
+    function showConfirm(message, callback) {
+      document.getElementById('confirmMessage').textContent = message;
+      document.getElementById('confirmModal').classList.add('show');
+      confirmCallback = callback;
+      document.getElementById('confirmYes').onclick = () => {
+        callback(true);
+        closeModal('confirmModal');
+      };
+    }
+
     function initUsageChart() {
       const ctx = document.getElementById('usageChart');
       if (!ctx) return;
-      
+
       const labels = [];
       const data = new Array(7).fill(0);
       const today = new Date();
-      
+
       for (let i = 6; i >= 0; i--) {
         const date = new Date(today);
         date.setDate(date.getDate() - i);
@@ -1635,40 +1696,16 @@
           responsive: true,
           maintainAspectRatio: false,
           plugins: {
-            legend: {
-              display: false
-            }
+            legend: { display: false }
           },
           scales: {
-            x: {
-              grid: {
-                color: '#333333'
-              },
-              ticks: {
-                color: '#aaaaaa',
-                font: {
-                  family: 'Google Sans'
-                }
-              }
-            },
-            y: {
-              grid: {
-                color: '#333333'
-              },
-              ticks: {
-                color: '#aaaaaa',
-                font: {
-                  family: 'Google Sans'
-                },
-                beginAtZero: true
-              }
-            }
+            x: { grid: { color: '#333333' }, ticks: { color: '#aaaaaa', font: { family: 'Google Sans' } } },
+            y: { grid: { color: '#333333' }, ticks: { color: '#aaaaaa', font: { family: 'Google Sans' }, beginAtZero: true } }
           }
         }
       });
     }
 
-    // Update profile information
     function updateProfileInfo(user) {
       if (!user) return;
 
@@ -1690,41 +1727,32 @@
       const lastWeekUsage = document.getElementById('lastWeekUsage');
       const todayUsage = document.getElementById('todayUsage');
 
-      // Basic profile info
       profileName.textContent = user.displayName || 'User Name';
       profileEmail.textContent = user.email || 'user@example.com';
       profileFullName.textContent = user.displayName || 'Not provided';
       profileEmailDetail.textContent = user.email || 'Not provided';
       profileAccountId.textContent = user.uid.substring(0, 8) + '...';
-      
-      // Profile avatar
+
       profileAvatarLarge.src = user.photoURL || 'https://via.placeholder.com/120x120/3F9FFF/ffffff?text=' + (user.displayName ? user.displayName.charAt(0) : 'U');
-      
-      // Join date (using creation time if available, otherwise current date)
+
       const joinDate = user.metadata.creationTime ? new Date(user.metadata.creationTime) : new Date();
       profileJoinDate.textContent = `Member since: ${joinDate.toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}`;
       profileMemberSince.textContent = joinDate.toLocaleDateString();
-      
-      // Last login
+
       const lastLogin = user.metadata.lastSignInTime ? new Date(user.metadata.lastSignInTime) : new Date();
       profileLastLogin.textContent = lastLogin.toLocaleDateString();
 
-      // Usage statistics
       const totalCalls = history.length;
       totalApiCalls.textContent = totalCalls;
-      
-      // Calculate unique tools used
+
       const uniqueTools = [...new Set(history.map(item => item.type))];
       toolsUsed.textContent = uniqueTools.length;
-      
-      // Total spend (placeholder)
+
       totalSpend.textContent = '$0.00';
-      
-      // Average daily usage
+
       const daysSinceJoin = Math.max(1, Math.floor((new Date() - joinDate) / (1000 * 60 * 60 * 24)));
       avgDaily.textContent = Math.round(totalCalls / daysSinceJoin);
-      
-      // Most used tool
+
       if (history.length > 0) {
         const toolCounts = {};
         history.forEach(item => {
@@ -1735,22 +1763,21 @@
       } else {
         mostUsedTool.textContent = 'None yet';
       }
-      
-      // Time-based usage
+
       const now = new Date();
       const thisMonth = history.filter(item => {
         const itemDate = new Date(item.timestamp);
         return itemDate.getMonth() === now.getMonth() && itemDate.getFullYear() === now.getFullYear();
       }).length;
       thisMonthUsage.textContent = `${thisMonth} calls`;
-      
+
       const lastWeek = history.filter(item => {
         const itemDate = new Date(item.timestamp);
         const diffDays = Math.floor((now - itemDate) / (1000 * 60 * 60 * 24));
         return diffDays <= 7;
       }).length;
       lastWeekUsage.textContent = `${lastWeek} calls`;
-      
+
       const today = history.filter(item => {
         const itemDate = new Date(item.timestamp);
         return itemDate.toDateString() === now.toDateString();
@@ -1758,28 +1785,23 @@
       todayUsage.textContent = `${today} calls`;
     }
 
-    // Authentication state listener
     auth.onAuthStateChanged(user => {
       const welcomeTitle = document.getElementById('welcomeTitle');
-      const googleSignInBtn = document.getElementById('googleSignInBtn');
-      const signOutBtn = document.getElementById('signOutBtn');
-      const deleteAccountBtn = document.getElementById('deleteAccountBtn');
-      const accountId = document.getElementById('accountId');
       const userDropdown = document.getElementById('userDropdown');
       const userAvatar = document.getElementById('userAvatar');
       const userName = document.getElementById('userName');
+      const accountId = document.getElementById('accountId');
 
       if (user) {
         currentUser = user;
         welcomeTitle.textContent = `Welcome ${user.displayName || 'User'}!`;
         accountId.textContent = user.uid.substring(0, 8) + '...';
-        
-        googleSignInBtn.style.display = 'none';
+
         userDropdown.style.display = 'block';
-        
         userAvatar.src = user.photoURL || 'https://via.placeholder.com/32x32/3F9FFF/ffffff?text=' + (user.displayName ? user.displayName.charAt(0) : 'U');
         userName.textContent = user.displayName || 'User';
 
+        showTool('accounts');
         setTimeout(initUsageChart, 100);
         updateProfileInfo(user);
 
@@ -1790,6 +1812,7 @@
           createdAt: firebase.firestore.FieldValue.serverTimestamp()
         }, { merge: true }).catch(err => {
           console.error('Error storing user data:', err);
+          showError('Failed to store user data: ' + err.message);
         });
 
         loadUserHistory(user.uid);
@@ -1797,11 +1820,11 @@
         currentUser = null;
         welcomeTitle.textContent = 'Welcome!';
         accountId.textContent = '-';
-        googleSignInBtn.style.display = 'flex';
         userDropdown.style.display = 'none';
         history.length = 0;
         updateHistoryList();
         updateRecentHistoryList();
+        showTool('auth');
       }
     });
 
@@ -1824,57 +1847,56 @@
       provider.addScope('email');
       auth.signInWithPopup(provider).catch(err => {
         console.error('Sign-in error:', err);
-        alert('Failed to sign in with Google: ' + err.message);
+        showError('Failed to sign in with Google: ' + err.message);
       });
     });
 
     document.getElementById('signOutBtn').addEventListener('click', () => {
       auth.signOut().catch(err => {
         console.error('Sign-out error:', err);
-        alert('Failed to sign out: ' + err.message);
+        showError('Failed to sign out: ' + err.message);
       });
     });
 
     document.getElementById('deleteAccountBtn').addEventListener('click', () => {
-      if (confirm('Are you sure you want to delete your account and all associated data? This cannot be undone.')) {
-        const user = auth.currentUser;
-        if (user) {
-          db.collection('users').doc(user.uid).delete().then(() => {
-            db.collection('history').where('userId', '==', user.uid).get().then(snapshot => {
-              const batch = db.batch();
-              snapshot.forEach(doc => batch.delete(doc.ref));
-              return batch.commit();
-            }).then(() => {
-              user.delete().then(() => {
-                alert('Account deleted successfully.');
+      showConfirm('Are you sure you want to delete your account and all associated data? This cannot be undone.', (confirmed) => {
+        if (confirmed) {
+          const user = auth.currentUser;
+          if (user) {
+            db.collection('users').doc(user.uid).delete().then(() => {
+              db.collection('history').where('userId', '==', user.uid).get().then(snapshot => {
+                const batch = db.batch();
+                snapshot.forEach(doc => batch.delete(doc.ref));
+                return batch.commit();
+              }).then(() => {
+                user.delete().then(() => {
+                  showError('Account deleted successfully.');
+                }).catch(err => {
+                  console.error('Error deleting account:', err);
+                  showError('Failed to delete account: ' + err.message);
+                });
               }).catch(err => {
-                console.error('Error deleting account:', err);
-                alert('Failed to delete account: ' + err.message);
+                console.error('Error deleting history:', err);
+                showError('Failed to delete history: ' + err.message);
               });
             }).catch(err => {
-              console.error('Error deleting history:', err);
-              alert('Failed to delete history: ' + err.message);
+              console.error('Error deleting user data:', err);
+              showError('Failed to delete user data: ' + err.message);
             });
-          }).catch(err => {
-            console.error('Error deleting user data:', err);
-            alert('Failed to delete user data: ' + err.message);
-          });
+          }
         }
-      }
+      });
     });
 
     function loadUserHistory(userId) {
-      console.log('Loading history for userId:', userId);
       const historyLoading = document.getElementById('historyLoading');
       if (historyLoading) historyLoading.style.display = 'block';
-      
+
       db.collection('history').where('userId', '==', userId).orderBy('timestamp', 'desc').get()
         .then(snapshot => {
-          console.log('Retrieved', snapshot.size, 'history documents');
           history.length = 0;
           snapshot.forEach(doc => {
             const data = doc.data();
-            console.log('History document:', data);
             history.push({
               id: doc.id,
               type: data.type,
@@ -1893,7 +1915,7 @@
         .catch(err => {
           console.error('Error loading history:', err);
           if (historyLoading) historyLoading.style.display = 'none';
-          alert('Failed to load history: ' + err.message);
+          showError('Failed to load history: ' + err.message);
         });
     }
 
@@ -1904,7 +1926,7 @@
     function sortHistory(key) {
       const sortNameBtn = document.getElementById('sort-name');
       const sortDateBtn = document.getElementById('sort-date');
-      
+
       if (currentSort === key) {
         sortOrder = sortOrder === 'asc' ? 'desc' : 'asc';
       } else {
@@ -1933,40 +1955,30 @@
       updateRecentHistoryList();
     }
 
-    function toggleSidebar() {
-      const sidebar = document.getElementById('sidebar');
-      const mainContent = document.getElementById('mainContent');
-      
-      sidebar.classList.toggle('hidden');
-      mainContent.classList.toggle('full-width');
-    }
-
     function showTool(type) {
+      if (!currentUser && type !== 'auth') {
+        showTool('auth');
+        return;
+      }
+
       document.querySelectorAll('.tool-section').forEach(section => {
         section.classList.remove('active');
       });
-      
+
       document.querySelectorAll('.sidebar-nav a').forEach(a => {
         a.classList.remove('active');
       });
-      
+
       document.getElementById(type).classList.add('active');
-      
-      // Handle profile navigation (no sidebar nav for profile)
-      if (type !== 'profile') {
+
+      if (type !== 'profile' && type !== 'auth') {
         document.getElementById(`nav-${type}`).classList.add('active');
-      }
-      
-      if (window.innerWidth <= 768) {
-        document.getElementById('sidebar').classList.add('hidden');
-        document.getElementById('mainContent').classList.add('full-width');
       }
     }
 
-    // Export user data function
     function exportUserData() {
       if (!currentUser) {
-        alert('Please sign in to export your data.');
+        showError('Please sign in to export your data.');
         return;
       }
 
@@ -2005,13 +2017,13 @@
           const file = event.target.files[0];
           if (!file) return;
 
-          previewDiv.textContent = "⏳ Extracting text from file...";
+          previewDiv.textContent = "Extracting text from file...";
           try {
             let extractedText = await extractTextFromFile(file);
             textArea.value = extractedText;
             previewDiv.textContent = `File loaded: ${file.name} (Extracted text displayed in textarea)`;
           } catch (err) {
-            previewDiv.textContent = `❌ Error extracting text: ${err.message}`;
+            previewDiv.textContent = `Error extracting text: ${err.message}`;
             textArea.value = '';
           }
         });
@@ -2019,6 +2031,10 @@
     });
 
     async function extractTextFromFile(file) {
+      if (!currentUser) {
+        throw new Error('Please sign in to upload files.');
+      }
+
       const fileType = file.name.split('.').pop().toLowerCase();
       const maxFileSize = 5 * 1024 * 1024;
 
@@ -2092,15 +2108,23 @@
 
     async function process(type) {
       if (!currentUser) {
-        alert('Please sign in to use this feature.');
+        showError('Please sign in to use this feature.');
+        showTool('auth');
         return;
       }
+
       currentType = type;
       const input = document.getElementById(inputMap[type].text).value.trim();
       const output = document.getElementById(outMap[type]);
+      const loading = document.getElementById(inputMap[type].loading);
+      if (!loading) {
+        showError(`Loading element for type ${type} not found.`);
+        return;
+      }
 
       if (!input) {
-        return alert("Please provide input by pasting text or uploading a file.");
+        showError("Please provide input by pasting text or uploading a file.");
+        return;
       }
 
       document.getElementById('textPreview').value = input;
@@ -2108,8 +2132,20 @@
     }
 
     async function confirmText() {
+      if (!currentType) {
+        showError('No tool selected. Please try again.');
+        return;
+      }
+
+      if (!currentUser) {
+        showError('Please sign in to continue.');
+        showTool('auth');
+        return;
+      }
+
       const input = document.getElementById('textPreview').value.trim();
       const output = document.getElementById(outMap[currentType]);
+      const loading = document.getElementById(inputMap[currentType].loading);
       let criteria = '';
 
       if (currentType === 'grade') {
@@ -2117,7 +2153,8 @@
       }
 
       document.getElementById('textPreviewModal').classList.remove('show');
-      output.textContent = "⏳ Processing...";
+      output.textContent = '';
+      loading.style.display = 'block';
 
       try {
         const res = await fetch("https://api.fireworks.ai/inference/v1/completions", {
@@ -2146,13 +2183,21 @@
 
         currentOutput = data.choices[0].text.trim();
         output.textContent = currentOutput;
+        loading.style.display = 'none';
         document.getElementById('storeModal').classList.add('show');
       } catch (err) {
-        output.textContent = `❌ Error: ${err.message}. Please check the file content or try again later.`;
+        loading.style.display = 'none';
+        output.textContent = `Error: ${err.message}. Please check the file content or try again later.`;
       }
     }
 
     function storeOutput() {
+      if (!currentUser) {
+        showError('Please sign in to store output.');
+        showTool('auth');
+        return;
+      }
+
       if (currentOutput && currentUser) {
         const timestamp = new Date();
         const name = document.getElementById('outputName').value.trim() || `${currentType.charAt(0).toUpperCase() + currentType.slice(1)} ${timestamp.toLocaleString()}`;
@@ -2163,10 +2208,9 @@
           timestamp: firebase.firestore.Timestamp.fromDate(timestamp),
           name
         };
-        console.log('Storing history item:', historyItem);
+
         db.collection('history').add(historyItem)
           .then(docRef => {
-            console.log('History stored with ID:', docRef.id);
             history.unshift({
               id: docRef.id,
               type: currentType,
@@ -2184,7 +2228,7 @@
           })
           .catch(err => {
             console.error('Error storing history:', err);
-            alert('Failed to store history: ' + err.message);
+            showError('Failed to store history: ' + err.message);
           });
       }
     }
@@ -2192,9 +2236,9 @@
     function updateRecentHistoryList() {
       const recentHistoryList = document.getElementById('recentHistoryList');
       recentHistoryList.innerHTML = '';
-      
+
       const recentHistory = history.slice(0, 2);
-      
+
       if (recentHistory.length === 0) {
         const li = document.createElement('li');
         li.className = 'history-item';
@@ -2202,11 +2246,11 @@
         recentHistoryList.appendChild(li);
         return;
       }
-      
+
       recentHistory.forEach(item => {
         const li = document.createElement('li');
         li.className = 'history-item';
-        
+
         li.innerHTML = `
           <div class="history-item-info">
             <div class="history-item-name">${item.name}</div>
@@ -2227,7 +2271,7 @@
             </button>
           </div>
         `;
-        
+
         recentHistoryList.appendChild(li);
       });
     }
@@ -2235,9 +2279,9 @@
     function updateHistoryList() {
       const fullHistoryList = document.getElementById('fullHistoryList');
       if (!fullHistoryList) return;
-      
+
       fullHistoryList.innerHTML = '';
-      
+
       if (history.length === 0) {
         const li = document.createElement('li');
         li.className = 'history-item';
@@ -2245,22 +2289,22 @@
         fullHistoryList.appendChild(li);
         return;
       }
-      
+
       history.forEach(item => {
         const li = document.createElement('li');
         li.className = 'history-item';
-        
+
         li.innerHTML = `
           <div class="history-item-info">
             <div class="history-item-name">${item.name}</div>
             <div class="history-item-date">${item.timestamp}</div>
           </div>
           <div class="history-item-actions">
-            <button class="btn btn-sm" onclick="viewResponse(\`${item.output.replace(/`/g, '\\`')}\`, '${item.name}')">
+            <button class="btn btn-sm" onclick="viewResponse(\`${encodeURIComponent(item.output)}\`, '${item.name}')">
               <span class="material-icons" style="font-size: 1rem;">visibility</span>
               View
             </button>
-            <button class="btn btn-sm" onclick="downloadOutput(\`${item.output.replace(/`/g, '\\`')}\`, '${item.type}', '${item.name}')">
+            <button class="btn btn-sm" onclick="downloadOutput(\`${encodeURIComponent(item.output)}\`, '${item.type}', '${item.name}')">
               <span class="material-icons" style="font-size: 1rem;">download</span>
               Download
             </button>
@@ -2270,36 +2314,37 @@
             </button>
           </div>
         `;
-        
+
         fullHistoryList.appendChild(li);
       });
     }
 
-    function viewResponse(output, name) {
-      document.getElementById('viewResponseContent').value = output;
+    function viewResponse(encodedOutput, name) {
+      document.getElementById('viewResponseContent').value = decodeURIComponent(encodedOutput);
       document.getElementById('viewResponseModal').classList.add('show');
     }
 
     function deleteHistoryItem(historyId, name) {
-      if (confirm(`Are you sure you want to delete "${name}"? This cannot be undone.`)) {
-        db.collection('history').doc(historyId).delete()
-          .then(() => {
-            console.log(`Deleted history item: ${historyId}`);
-            const index = history.findIndex(item => item.id === historyId);
-            if (index !== -1) {
-              history.splice(index, 1);
-              updateHistoryList();
-              updateRecentHistoryList();
-              updateApiCallsCount();
-              initUsageChart();
-              if (currentUser) updateProfileInfo(currentUser);
-            }
-          })
-          .catch(err => {
-            console.error('Error deleting history item:', err);
-            alert('Failed to delete history item: ' + err.message);
-          });
-      }
+      showConfirm(`Are you sure you want to delete "${name}"? This cannot be undone.`, (confirmed) => {
+        if (confirmed) {
+          db.collection('history').doc(historyId).delete()
+            .then(() => {
+              const index = history.findIndex(item => item.id === historyId);
+              if (index !== -1) {
+                history.splice(index, 1);
+                updateHistoryList();
+                updateRecentHistoryList();
+                updateApiCallsCount();
+                initUsageChart();
+                if (currentUser) updateProfileInfo(currentUser);
+              }
+            })
+            .catch(err => {
+              console.error('Error deleting history item:', err);
+              showError('Failed to delete history item: ' + err.message);
+            });
+        }
+      });
     }
 
     function downloadOutput(output, type, name) {
@@ -2317,16 +2362,10 @@
       if (modalId === 'storeModal') {
         document.getElementById('outputName').value = '';
       }
+      confirmCallback = null;
     }
 
-    window.addEventListener('resize', () => {
-      if (window.innerWidth > 768) {
-        document.getElementById('sidebar').classList.add('hidden');
-        document.getElementById('mainContent').classList.add('full-width');
-      }
-    });
-
-    showTool('accounts');
+    showTool('auth');
   </script>
-</body>
+  </body>
 </html>
