@@ -301,7 +301,7 @@
         function signInWithGoogle() {
             const provider = new firebase.auth.GoogleAuthProvider();
             auth.signInWithPopup(provider).then(() => {
-                window.location.href = 'auraliedu.netlify.app';
+                window.location.href = 'index';
             }).catch(err => {
                 console.error('Sign-in error:', err);
                 alert('Failed to sign in with Google: ' + err.message);
